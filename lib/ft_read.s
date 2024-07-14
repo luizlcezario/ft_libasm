@@ -13,9 +13,10 @@ ft_read:
     jne .done                   ; Se não houve erro, salta para .done
 
     ; Configura errno em caso de erro
-    extern __errno_location
-    call __errno_location       ; Obtém o endereço da variável errno
-    mov [rax], rdi              ; Armazena o código de erro em errno
+    mov rdi, fs:[0x18]          ; Obtém o endereço de errno
+    mov [rdi], eax              ; Define errno com o valor de erro em rax
 
+    mov rax, -1          
+    ret
 .done:
     ret                         ; Retorna ao chamador

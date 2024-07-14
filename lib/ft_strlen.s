@@ -1,15 +1,15 @@
 section .text
-    global strlen
+    global ft_strlen
 
-; Função strlen
+; Função ft_read
 ; rdi - Ponteiro para a string
-; rax - Comprimento da string (valor de retorno)
-strlen:
-    xor rax, rax            ; rax será usado como contador (inicializa com 0)
+; rax - Valor de retorno (número de bytes lidos ou código de erro)
+ft_strlen:
+    xor rax, rax
 .loop:
-    cmp byte [rdi + rax], 0 ; Comparar o byte atual com 0
-    je .done                ; Se for 0, terminar
-    inc rax                 ; Incrementar o contador
-    jmp .loop               ; Repetir o loop
+    cmp byte [rdi + rax], 0
+    je .done
+    inc rax
+    jmp .loop
 .done:
-    ret                     ; Retornar com o comprimento em rax
+    ret

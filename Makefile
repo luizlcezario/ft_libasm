@@ -16,7 +16,7 @@ OBJS			=	$(SOURCES:$(SOURCES_DIR)/%.s=$(OBJ_DIR)/%.o)
 $(OBJ_DIR)/%.o:		$(SOURCES_DIR)/%.s
 	nasm -f elf64 $< -o $@
 
-all:				$(NAME)
+all: $(NAME)
 
 $(NAME): $(LIB)
 	nasm -f elf64 $(MAIN) -o $(MAIN:%.s=$(OBJ_DIR)/%.o)
@@ -40,4 +40,7 @@ fclean:				clean
 
 re:					fclean all
 
-.PHONY:				all clean fclean re
+test: fclean $(LIB)
+	make -C tester re && ./tester/tester
+
+.PHONY:				all clean fclean re test
