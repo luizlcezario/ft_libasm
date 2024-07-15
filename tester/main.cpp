@@ -64,15 +64,23 @@ void setup_ft_strlen() {
 }
 
 void setup_ft_write() {
+	char buffer[] = "test\0";
 	testCases.push_back({testIO("Hello, World!", false), "testIO('Hello, World!', false)"});
 	testCases.push_back({testIO("Hello, World!\t\t\t\nasldkalsd\n", false), "testIO('Hello, World!\\t\\t\\t\\nasldkalsd\\n', false)" });
-	std::cout << ft_read(-1, NULL, 1) << errno << std::endl;
-	testCases.push_back({ft_read(-1, NULL, 1) == -1, "ft_read(-1, NULL, 1) == -1" });
+	testCases.push_back({ft_write(1, buffer, 0) == 0, "ft_write(1, 'test', 0) == 0" });
+	testCases.push_back({ft_write(1, NULL , 1) == -1, "ft_write(1, NULL, 0) == -1" });
+	testCases.push_back({ft_write(-1, NULL, 1) == -1, "ft_write(-1, NULL, 1) == -1" });
+	testCases.push_back({ft_write(-1,  buffer, 1) == -1, "ft_write(-1, 'test', 1) == -1" });
 }
 
 void setup_ft_read() {
+	char buffer[] = "test\0";
 	testCases.push_back({testIO("Hello, World!", true), "testIO('Hello, World!', true)"});
 	testCases.push_back({testIO("Hello, World!\t\t\t\nasldkalsd\n", true), "testIO('Hello, World!\\t\\t\\t\\nasldkalsd\\n', true)" });
+	testCases.push_back({ft_read(1, buffer, 0) == 0, "ft_read(1, NULL, 0) == -1" });
+	testCases.push_back({ft_read(1, NULL, 1) == -1, "ft_read(1, NULL, 0) == -1" });
+	testCases.push_back({ft_read(-1, NULL, 1) == -1, "ft_read(-1, NULL, 1) == -1" });
+	testCases.push_back({ft_read(-1, buffer, 1) == -1, "ft_read(-1, 'test', 1) == -1" });
 }
 
 void setup_ft_strcpy() {
@@ -82,6 +90,21 @@ void setup_ft_strcpy() {
 	testCases.push_back({ft_strcpy((char *)"test", NULL) == NULL, "ft_strcpy('test, NULL) == NULL" });
 	testCases.push_back({ft_strcpy(NULL, NULL) == NULL, "ft_strcpy(NULL, NULL) == NULL" });
 	testCases.push_back({ft_strcpy(NULL, "test") == NULL, "ft_strcpy(NULL, 'test') == NULL" });
+}
+
+void setup_ft_strdup() {
+	char *res = ft_strdup("Hello, World!");
+	char *res2 = ft_strdup("");
+	testCases.push_back({std::string(res) == std::string("Hello, World!"), "ft_strdup('Hello, World!') == strdup('Hello, World!')" });
+	testCases.push_back({std::string(res2) == std::string(""), "ft_strdup('') == strdup('')" });
+	testCases.push_back({ft_strdup(NULL) == NULL, "ft_strdup(NULL) == NULL" });
+	try {
+		free(res);
+		free(res2);
+		testCases.push_back({true, "free success verify if asm malloc the new char*"});
+	} catch (std::exception &e) {
+		testCases.push_back({false, "free failed verify if asm malloc the new char*"});
+	}
 }
 
 void runTests() {
@@ -116,7 +139,9 @@ int main()
 	std::cout << BLUE << "ft_strcpy: ";
 	setup_ft_strcpy();
 	runTests();
-	// std::cout << BLUE << "ft_strdup: ";
+	std::cout << BLUE << "ft_strdup: ";
+	setup_ft_strdup();
+	runTests();
 
 }
 
