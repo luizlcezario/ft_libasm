@@ -1,6 +1,6 @@
 NAME			=	main
 LIB				=	libasm.a
-CLASS			=	ft_strlen.s ft_write.s ft_read.s ft_strcpy.s ft_strdup.s
+CLASS			=	ft_strlen.s ft_write.s ft_read.s ft_strcpy.s ft_strdup.s ft_strcmp.s
 SRC				=	$(addprefix lib/, $(CLASS))
 
 MAIN			=	main.s 

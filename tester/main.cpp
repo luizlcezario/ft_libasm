@@ -107,6 +107,19 @@ void setup_ft_strdup() {
 	}
 }
 
+void setup_ft_strcmp() {
+	testCases.push_back({ft_strcmp("Hello, World!", "Hello, World!") == 0, "ft_strcmp('Hello, World!', 'Hello, World!') == 0" });
+	testCases.push_back({ft_strcmp("Hello, World!", "Hello, World") == 33, "ft_strcmp('Hello, World!', 'Hello, World') == 33" });
+	testCases.push_back({ft_strcmp("Hello, World!", "Hello, World!!") == -33, "ft_strcmp('Hello, World!', 'Hello, World!!') == -33" });
+	testCases.push_back({ft_strcmp("Hello, World!", "") == 72, "ft_strcmp('Hello, World!', '') == 72" });
+	testCases.push_back({ft_strcmp("", "Hello, World!") == -72, "ft_strcmp('', 'Hello, World!') == -72" });
+	testCases.push_back({ft_strcmp("", "") == 0, "ft_strcmp('', '') == 0" });
+	testCases.push_back({ft_strcmp(NULL, NULL) == 0, "ft_strcmp(NULL, NULL) == 0" });
+	// testCases.push_back({ft_strcmp(NULL, "Hello, World!") == -72, "ft_strcmp(NULL, 'Hello, World!') == -72" });
+	// testCases.push_back({ft_strcmp("Hello, World!", NULL) == 72, "ft_strcmp('Hello, World!', NULL) == 72" });
+
+}
+
 void runTests() {
 	std::vector<std::string> printError;
     for (const auto& testCase : testCases) {
@@ -125,6 +138,8 @@ void runTests() {
 	testCases.clear();
 }
 
+
+
 int main()
 {
 	std::cout << BLUE  << "ft_strlen: ";
@@ -141,6 +156,9 @@ int main()
 	runTests();
 	std::cout << BLUE << "ft_strdup: ";
 	setup_ft_strdup();
+	runTests();
+	std::cout << BLUE << "ft_strcmp: ";
+	setup_ft_strcmp();
 	runTests();
 
 }
