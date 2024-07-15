@@ -9,14 +9,14 @@ section .text
 ft_read:
     mov rax, 0                  ; Número da syscall para sys_read
     syscall                     ; Invoca a syscall
-    cmp rax, -1                 ; Verifica se houve erro (syscall retorna -1 em caso de erro)
-    jne .done                   ; Se não houve erro, salta para .done
-
+    cmp rax, 0                 ; Verifica se houve erro (syscall retorna -1 em caso de erro)
+    jl error                   ; Se não houve erro, salta para .done
+    ret
     ; Configura errno em caso de erro
     mov rdi, fs:[0x18]          ; Obtém o endereço de errno
     mov [rdi], eax              ; Define errno com o valor de erro em rax
 
-    mov rax, -1          
+    mov rax, -1
     ret
-.done:
+error:
     ret                         ; Retorna ao chamador

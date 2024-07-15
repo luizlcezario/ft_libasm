@@ -6,17 +6,14 @@
 #include <utility>
 #include <unistd.h>
 #include <assert.h>
+#include <string.h>
 #include "colors.hpp"
 
 typedef std::pair<bool, std::string> TestParameter;
 
 typedef std::vector<TestParameter> TestCases;
 
-TestCases ft_strlen_test_cases;
-
-TestCases ft_write_test_cases;
-
-TestCases ft_read_test_cases;
+TestCases testCases;
 
 std::string assertEqual(bool exp, std::string msg) {
 	if (exp) {
@@ -51,25 +48,43 @@ bool testIO(std::string msg, bool isRead) {
 	return len == msg.size() && msg == std::string(buffer);
 }
 
-
-void test_ft_strlen() {
-	ft_strlen_test_cases.push_back({ft_strlen("Hello, World!") == 13, "ft_strlen('Hello, World!') == 13"});
-	ft_strlen_test_cases.push_back({ ft_strlen("") == 0, "ft_strlen('') == 1" });
-	ft_strlen_test_cases.push_back({ ft_strlen("Hello, World!\n\t\0") == 15, "ft_strlen('Hello, World!\\n\\t\\0') == 15" });
-	ft_strlen_test_cases.push_back({ ft_strlen("Hello, World!\0\0") == 13, "ft_strlen('Hello, World!\\0\\0') == 13" });
+bool testStrCpy(const char *msg) {
+	char buffer[strlen(msg) + 1];
+	char *res = ft_strcpy(buffer, msg);
+	return std::string(msg) == std::string(buffer) && res == buffer;
 }
 
-void test_ft_write() {
-	ft_write_test_cases.push_back({testIO("Hello, World!", false), "testWrite('Hello, World!')"});
-	ft_write_test_cases.push_back({testIO("Hello, World!\t\t\t\nasldkalsd\n", false), "testWrite('Hello, World!\\t\\t\\t\\nasldkalsd\\n')" });
+
+void setup_ft_strlen() {
+	testCases.push_back({ft_strlen("Hello, World!") == 13, "ft_strlen('Hello, World!') == 13"});
+	testCases.push_back({ ft_strlen("") == 0, "ft_strlen('') == 0" });
+	testCases.push_back({ ft_strlen(NULL) == 0, "ft_strlen(NULL) == 0" });
+	testCases.push_back({ ft_strlen("Hello, World!\n\t\0") == 15, "ft_strlen('Hello, World!\\n\\t\\0') == 15" });
+	testCases.push_back({ ft_strlen("Hello, World!\0\0") == 13, "ft_strlen('Hello, World!\\0\\0') == 13" });
 }
 
-void test_ft_read() {
-	ft_read_test_cases.push_back({testIO("Hello, World!", true), "testWrite('Hello, World!')"});
-	ft_read_test_cases.push_back({testIO("Hello, World!\t\t\t\nasldkalsd\n", true), "testWrite('Hello, World!\\t\\t\\t\\nasldkalsd\\n')" });
+void setup_ft_write() {
+	testCases.push_back({testIO("Hello, World!", false), "testIO('Hello, World!', false)"});
+	testCases.push_back({testIO("Hello, World!\t\t\t\nasldkalsd\n", false), "testIO('Hello, World!\\t\\t\\t\\nasldkalsd\\n', false)" });
+	std::cout << ft_read(-1, NULL, 1) << errno << std::endl;
+	testCases.push_back({ft_read(-1, NULL, 1) == -1, "ft_read(-1, NULL, 1) == -1" });
 }
 
-void runTests(TestCases testCases) {
+void setup_ft_read() {
+	testCases.push_back({testIO("Hello, World!", true), "testIO('Hello, World!', true)"});
+	testCases.push_back({testIO("Hello, World!\t\t\t\nasldkalsd\n", true), "testIO('Hello, World!\\t\\t\\t\\nasldkalsd\\n', true)" });
+}
+
+void setup_ft_strcpy() {
+	testCases.push_back({testStrCpy("Hello, World!"), "testStrCpy('Hello, World!')" });
+	testCases.push_back({testStrCpy("Hello, World!\n\t\0"), "testStrCpy('Hello, World!\\n\\t\\0')" });
+	testCases.push_back({testStrCpy(""), "testStrCpy('')" });
+	testCases.push_back({ft_strcpy((char *)"test", NULL) == NULL, "ft_strcpy('test, NULL) == NULL" });
+	testCases.push_back({ft_strcpy(NULL, NULL) == NULL, "ft_strcpy(NULL, NULL) == NULL" });
+	testCases.push_back({ft_strcpy(NULL, "test") == NULL, "ft_strcpy(NULL, 'test') == NULL" });
+}
+
+void runTests() {
 	std::vector<std::string> printError;
     for (const auto& testCase : testCases) {
     	std::string err = assertEqual(testCase.first, testCase.second);
@@ -84,24 +99,24 @@ void runTests(TestCases testCases) {
 			std::cout << "\t\t" << RED << err << RESET <<  std::endl;
 		}
     }
-}
-
-
-void setup() {
-	test_ft_strlen();
-	test_ft_write();
-	test_ft_read();
+	testCases.clear();
 }
 
 int main()
 {
-	setup();
-	std::cout << BLUE  << "ft_strlen: " ;
-	runTests(ft_strlen_test_cases);
+	std::cout << BLUE  << "ft_strlen: ";
+	setup_ft_strlen();
+	runTests();
 	std::cout << BLUE << "ft_write: ";
-	runTests(ft_write_test_cases);
+	setup_ft_write();
+	runTests();
 	std::cout << BLUE << "ft_read: ";
-	runTests(ft_write_test_cases);
+	setup_ft_read();
+	runTests();
+	std::cout << BLUE << "ft_strcpy: ";
+	setup_ft_strcpy();
+	runTests();
+	// std::cout << BLUE << "ft_strdup: ";
 
 }
 

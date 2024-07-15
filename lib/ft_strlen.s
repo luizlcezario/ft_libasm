@@ -6,6 +6,8 @@ section .text
 ; rax - Valor de retorno (número de bytes lidos ou código de erro)
 ft_strlen:
     xor rax, rax
+    test rdi, rdi
+    jz .done
 .loop:
     cmp byte [rdi + rax], 0
     je .done
