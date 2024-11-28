@@ -13,22 +13,25 @@ SOURCES			=	$(addprefix $(SOURCES_DIR)/, $(SRC))
 
 OBJS			=	$(SOURCES:$(SOURCES_DIR)/%.s=$(OBJ_DIR)/%.o)
 
-$(OBJ_DIR)/%.o:		$(SOURCES_DIR)/%.s
-	nasm -f elf64 $< -o $@
 
-all: $(NAME)
+$(OBJS): $(OBJ_DIR)
 
-$(NAME): $(LIB)
-	nasm -f elf64 $(MAIN) -o $(MAIN:%.s=$(OBJ_DIR)/%.o)
-	gcc -nostartfiles -o $(NAME) $(MAIN:%.s=$(OBJ_DIR)/%.o) -L. -lasm
+$(OBJ_DIR)/%.o:   $(SOURCES_DIR)/%.s
+	nasm -f elf64 $< -o $@  
+
+all: $(LIB) $(NAME)
+
+$(NAME):  $(OBJ_DIR) $(LIB)
+	nasm  -f elf64 $(MAIN) -o $(MAIN:%.s=$(OBJ_DIR)/%.o)
+	gcc -fPIE -pie -nostartfiles -o $(NAME) ./obj/main.o -L. -lasm  
 
 
-$(OBJ_DIR):
+$(OBJ_DIR): 
 	mkdir -p $(OBJ_DIR)
 	mkdir -p $(addprefix $(OBJ_DIR)/, lib)
 
-$(LIB): $(OBJ_DIR) $(OBJS) 
-	ar rcs $(LIB) $(OBJS) 
+$(LIB):  $(OBJS) 
+	ar rc $(LIB) $^
 	ranlib $(LIB)
 
 clean:
@@ -37,6 +40,7 @@ clean:
 fclean:				clean
 					rm -rf $(NAME)
 					rm -rf $(LIB)
+					make -C tester fclean
 
 re:					fclean all
 

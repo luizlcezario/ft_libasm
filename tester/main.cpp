@@ -58,7 +58,8 @@ bool testStrCpy(const char *msg) {
 void setup_ft_strlen() {
 	testCases.push_back({ft_strlen("Hello, World!") == 13, "ft_strlen('Hello, World!') == 13"});
 	testCases.push_back({ ft_strlen("") == 0, "ft_strlen('') == 0" });
-	testCases.push_back({ ft_strlen(NULL) == 0, "ft_strlen(NULL) == 0" });
+	ft_strlen(NULL);
+	testCases.push_back({ errno == 22, "errno == 9" });
 	testCases.push_back({ ft_strlen("Hello, World!\n\t\0") == 15, "ft_strlen('Hello, World!\\n\\t\\0') == 15" });
 	testCases.push_back({ ft_strlen("Hello, World!\0\0") == 13, "ft_strlen('Hello, World!\\0\\0') == 13" });
 }
@@ -68,9 +69,17 @@ void setup_ft_write() {
 	testCases.push_back({testIO("Hello, World!", false), "testIO('Hello, World!', false)"});
 	testCases.push_back({testIO("Hello, World!\t\t\t\nasldkalsd\n", false), "testIO('Hello, World!\\t\\t\\t\\nasldkalsd\\n', false)" });
 	testCases.push_back({ft_write(1, buffer, 0) == 0, "ft_write(1, 'test', 0) == 0" });
+	ft_write(1, NULL , 1);
+	testCases.push_back({ errno == 22, "errno == 22" });
 	testCases.push_back({ft_write(1, NULL , 1) == -1, "ft_write(1, NULL, 0) == -1" });
+	ft_write(-1, NULL, 1);
+	testCases.push_back({ errno == 22, "errno == 22" });
 	testCases.push_back({ft_write(-1, NULL, 1) == -1, "ft_write(-1, NULL, 1) == -1" });
+	ft_write(1, NULL , 1);
+	testCases.push_back({ errno == 22, "errno == 22" });
 	testCases.push_back({ft_write(-1,  buffer, 1) == -1, "ft_write(-1, 'test', 1) == -1" });
+	ft_write(-1,  buffer, 1);
+	testCases.push_back({ errno == 22, "errno == 22" });
 }
 
 void setup_ft_read() {

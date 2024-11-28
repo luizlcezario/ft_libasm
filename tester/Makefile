@@ -11,12 +11,15 @@ $(NAME): $(OBJ)
 
 
 $(OBJ): $(SRC)
-	g++ -c $(SRC) -o $(OBJ) 
+	g++ -c $(SRC) -o $(OBJ)
 
 clean: 
+	rm -rf $(OBJ)
+
+fclean: clean
 	rm -f $(NAME)
 
-re: clean all
+re: fclean all
 
 
 .PHONY: all clean re

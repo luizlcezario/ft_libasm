@@ -1,3 +1,4 @@
+
 global	ft_read
 extern	__errno_location
 
@@ -10,12 +11,12 @@ extern	__errno_location
 ft_read:
     mov rax, 0                  ; Número da syscall para sys_read
     test rsi, rsi
-    jz error
+    jz .error
     syscall                     ; Invoca a syscall
     cmp rax, 0                 ; Verifica se houve erro (syscall retorna -1 em caso de erro)
-    jl error                   ; Se não houve erro, salta para .done
+    jl .error                   ; Se não houve erro, salta para .done
     ret
-error:
+.error:
 	neg		rax			; car le syscall renvoie dans rax errno mais en negatif
 	mov		rdi, rax		; rdi sert de tampon car apres rax prendera le retour de errno location
 	call	__errno_location  WRT ..plt	; errno location renvoie un pointeur sur errno dans rax

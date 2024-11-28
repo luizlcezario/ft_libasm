@@ -7,13 +7,13 @@ section .text
 
 _start:
     ; Chamar a função strlen
-    lea rdi, [msg]              ; Passar o endereço da string para a função
+    lea rdi, [rel msg]              ; Passar o endereço da string para a função
     call ft_strlen
     ; Agora rax contém o comprimento da string
 
     ; Chamar a função write
     mov rdi, 1                  ; Descritor de arquivo 1 (stdout)
-    lea rsi, [msg]              ; Endereço da string
+    lea rsi, [rel msg]              ; Endereço da string
     mov rdx, rax                ; Comprimento da string
     call ft_write
 
