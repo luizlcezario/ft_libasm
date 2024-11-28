@@ -20,7 +20,7 @@ ft_write:
 .error:
 	neg		rax			
 	mov		rdi, rax	
-	call	__errno_location 
-	mov		[rax], 	rdi
+    call 	__errno_location WRT ..plt
+	mov       dword [rax], 22 
 	mov		rax, -1
 	ret				

@@ -18,6 +18,7 @@ $(OBJS): $(OBJ_DIR)
 
 $(OBJ_DIR)/%.o:   $(SOURCES_DIR)/%.s
 	nasm -f elf64 $< -o $@  
+	ar -crs $(LIB) $@
 
 all: $(LIB) $(NAME)
 
@@ -31,8 +32,6 @@ $(OBJ_DIR):
 	mkdir -p $(addprefix $(OBJ_DIR)/, lib)
 
 $(LIB):  $(OBJS) 
-	ar rc $(LIB) $^
-	ranlib $(LIB)
 
 clean:
 					rm -rf $(OBJ_DIR)

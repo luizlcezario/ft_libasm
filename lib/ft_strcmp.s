@@ -25,10 +25,10 @@ ft_strcmp:
 
 .set_errno:
     ; Chama __errno_location para obter o endereço de errno
-    call __errno_location     ; O endereço de errno será retornado em rax
-    mov dword [rax], 22         ; Define errno para 9 (ENOMEM)
-    xor rax, rax              ; Retorna 0 em rax (indicando erro)
-    ret
+    call      __errno_location WRT ..plt              ; rax = &errno
+    mov       dword [rax], 22           ; (4 bytes) *rax = EINVAL (Invalid Argument)
+    xor       rax, rax                      ; rax = 0
+    ret      
 
 .done:
     sub al, bl              ; calcula a diferença entre os bytes

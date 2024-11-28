@@ -86,9 +86,17 @@ void setup_ft_read() {
 	char buffer[] = "test\0";
 	testCases.push_back({testIO("Hello, World!", true), "testIO('Hello, World!', true)"});
 	testCases.push_back({testIO("Hello, World!\t\t\t\nasldkalsd\n", true), "testIO('Hello, World!\\t\\t\\t\\nasldkalsd\\n', true)" });
-	testCases.push_back({ft_read(1, buffer, 0) == 0, "ft_read(1, NULL, 0) == -1" });
+	ft_read(1, buffer, 0);
+	testCases.push_back({errno == 22, "ft_read(1, buffer, 0) ; errono error" });
+	testCases.push_back({ft_read(1, buffer, 0) == 0, "ft_read(1, buffer, 0) == -1" });
+	ft_read(1, NULL, 1);
+	testCases.push_back({errno == 22, "ft_read(1, NULL, 0) ; errono error" });
 	testCases.push_back({ft_read(1, NULL, 1) == -1, "ft_read(1, NULL, 0) == -1" });
+	ft_read(-1, NULL, 1);
+	testCases.push_back({errno == 22, "ft_read(-1, NULL, 1) ; errono error" });
 	testCases.push_back({ft_read(-1, NULL, 1) == -1, "ft_read(-1, NULL, 1) == -1" });
+	ft_read(-1, buffer, 1);
+	testCases.push_back({errno == 9, "ft_read(-1, 'test', 1);  errono error" });
 	testCases.push_back({ft_read(-1, buffer, 1) == -1, "ft_read(-1, 'test', 1) == -1" });
 }
 
@@ -97,8 +105,14 @@ void setup_ft_strcpy() {
 	testCases.push_back({testStrCpy("Hello, World!\n\t\0"), "testStrCpy('Hello, World!\\n\\t\\0')" });
 	testCases.push_back({testStrCpy(""), "testStrCpy('')" });
 	testCases.push_back({ft_strcpy((char *)"test", NULL) == NULL, "ft_strcpy('test, NULL) == NULL" });
+	ft_strcpy((char *)"test", NULL);
+	testCases.push_back({errno == 22, "ft_strcpy((char *)test, NULL) ; errono error" });
 	testCases.push_back({ft_strcpy(NULL, NULL) == NULL, "ft_strcpy(NULL, NULL) == NULL" });
-	testCases.push_back({ft_strcpy(NULL, "test") == NULL, "ft_strcpy(NULL, 'test') == NULL" });
+	ft_strcpy(NULL, NULL) ;
+	testCases.push_back({errno == 22, "ft_strdup(NULL) ; errono error" });
+	testCases.push_back({ft_strcpy(NULL, "test") == NULL, "ft_strcpy(NULL, NULL) == NULL" });
+	ft_strcpy(NULL, "test");
+	testCases.push_back({errno == 22, "ft_strdup(ft_strcpy(NULL, test)) ; errono error" });
 }
 
 void setup_ft_strdup() {
@@ -106,6 +120,8 @@ void setup_ft_strdup() {
 	char *res2 = ft_strdup("");
 	testCases.push_back({std::string(res) == std::string("Hello, World!"), "ft_strdup('Hello, World!') == strdup('Hello, World!')" });
 	testCases.push_back({std::string(res2) == std::string(""), "ft_strdup('') == strdup('')" });
+	ft_strdup(NULL);
+	testCases.push_back({errno == 22, "ft_strdup(NULL) ; errono error" });
 	testCases.push_back({ft_strdup(NULL) == NULL, "ft_strdup(NULL) == NULL" });
 	try {
 		free(res);
@@ -123,9 +139,15 @@ void setup_ft_strcmp() {
 	testCases.push_back({ft_strcmp("Hello, World!", "") == 72, "ft_strcmp('Hello, World!', '') == 72" });
 	testCases.push_back({ft_strcmp("", "Hello, World!") == -72, "ft_strcmp('', 'Hello, World!') == -72" });
 	testCases.push_back({ft_strcmp("", "") == 0, "ft_strcmp('', '') == 0" });
+	testCases.push_back({ft_strcmp(NULL, "Hello, World!") == 0, "ft_strcmp(NULL, 'Hello, World!') == 0" });
+	testCases.push_back({ft_strcmp("Hello, World!", NULL) == 0, "ft_strcmp('Hello, World!', NULL) == 0" });
 	testCases.push_back({ft_strcmp(NULL, NULL) == 0, "ft_strcmp(NULL, NULL) == 0" });
-	// testCases.push_back({ft_strcmp(NULL, "Hello, World!") == -72, "ft_strcmp(NULL, 'Hello, World!') == -72" });
-	// testCases.push_back({ft_strcmp("Hello, World!", NULL) == 72, "ft_strcmp('Hello, World!', NULL) == 72" });
+	ft_strcmp(NULL, NULL);
+	testCases.push_back({errno == 22, "ft_strcmp(NULL, NULL) == 0 ; errono error" });
+	ft_strcmp(NULL,  "Hello, World!");
+	testCases.push_back({errno == 22, "ft_strcmp(NULL, \"Hello, World!\") == 0 ; errono error" });
+	ft_strcmp( "Hello, World!",  NULL);
+	testCases.push_back({errno == 22, "ft_strcmp(\"Hello, World!\", NULL) == 0 ; errono error" });
 
 }
 

@@ -1,12 +1,13 @@
 
 global ft_strcpy
+extern __errno_location
 
 ft_strcpy:
     ; rdi = destino, rsi = origem
     test rdi, rdi
-    jz .done
+    jz .error
     test rsi, rsi            ; Verificar se a origem é NULL
-    jz .done
+    jz .error
     xor rcx, rcx            ; Zera o contador
 
 .copy_loop:
@@ -18,6 +19,8 @@ ft_strcpy:
     mov rax, rdi            ; Retornar o endereço da string de destino
     ret                     ; Retornar ao chamador
 
-.done:
+.error:
+    call __errno_location WRT ..plt
+    mov       dword [rax], 22 
     xor rax, rax            ; Retornar NULL (rax = 0)
     ret                     ; Retornar ao chamador

@@ -30,5 +30,7 @@ ft_strdup:
     jmp .renul
 
 .renul:
+    call __errno_location WRT ..plt
+    mov       dword [rax], 22 
     xor rax, rax            ; Definir o valor de retorno como NULL (rax = 0)
     jmp .done           

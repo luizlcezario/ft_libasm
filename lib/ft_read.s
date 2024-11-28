@@ -11,11 +11,12 @@ extern	__errno_location
 ft_read:
     mov rax, 0                  ; Número da syscall para sys_read
     test rsi, rsi
-    jz .error
+    jz .input_error
     syscall                     ; Invoca a syscall
     cmp rax, 0                 ; Verifica se houve erro (syscall retorna -1 em caso de erro)
     jl .error                   ; Se não houve erro, salta para .done
     ret
+
 .error:
 	neg		rax			; car le syscall renvoie dans rax errno mais en negatif
 	mov		rdi, rax		; rdi sert de tampon car apres rax prendera le retour de errno location
@@ -23,3 +24,9 @@ ft_read:
 	mov		[rax], 	rdi		; d'ou ici on met rdi dans errno
 	mov		rax, -1			; on met -1 dans rax pour renvoyer la bonne valeur d'un appel a read
 	ret				
+
+.input_error:
+    call            __errno_location WRT ..plt              ; rax = &errno
+    mov         dword [rax], 22           ; (4 bytes) *rax = EINVAL (Invalid Argument)
+    mov		    rax, -1		                     ; rax = 0
+    ret                     
